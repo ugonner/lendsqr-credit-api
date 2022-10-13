@@ -47,7 +47,7 @@ class LoanService {
     acceptLoanBid(loanId, loanBidId) {
         return __awaiter(this, void 0, void 0, function* () {
             const loan = (yield this.loanRepository.getLoan(loanId)).data;
-            const loanBid = (yield this.loanRepository.getLoanBid(loanBidId)).data;
+            const loanBid = ((yield this.loanRepository.getLoanBid(loanBidId)).data);
             loan.claimed = true;
             loan.borrower = Number(loanBid.borrower);
             const updateData = yield this.loanRepository.updateLoan(loan);
@@ -58,10 +58,11 @@ class LoanService {
     }
     repayLoanBid(transaction, loanId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const transferFund = (yield this.transactionService.makeTransaction(transaction));
+            const transferFund = yield this.transactionService.makeTransaction(transaction);
             if (!transferFund.status)
                 return api_response_1.ApiResponse.fail(transferFund.message, 400, transferFund.data);
-            const loan = (yield this.loanRepository.getLoan(loanId)).data;
+            const loan = (yield this.loanRepository.getLoan(loanId))
+                .data;
             const { amount, loanType, rate, duration, amountPaid } = loan;
             const totalAmount = helper_1.Helper.getAmountOnLoan(loanType, rate, amount, duration);
             if (Number(loan.totalAmount) <= amountPaid)
@@ -127,6 +128,34 @@ class LoanService {
             if (data.status)
                 return api_response_1.ApiResponse.success("loan found", 200, data.data);
             return api_response_1.ApiResponse.fail("unable to create loan", 400, data.data);
+        });
+    }
+    getUserDueDebts(userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const userDebts = yield this.getUserLoanBids(userId);
+            const { status, data } = userDebts;
+            if (status) {
+                if (data.length > 0) {
+                    const dueDebts = data.filter((debt) => debt.dueDate == new Date().getDate().toString());
+                    return api_response_1.ApiResponse.success("debsts got successfully", 200, dueDebts);
+                }
+                return api_response_1.ApiResponse.fail("No due dates", 404, userDebts.data);
+            }
+            return api_response_1.ApiResponse.fail("Unable to fetch debts", 500, userDebts.data);
+        });
+    }
+    getLendersMatureLoans(userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const userDebts = yield this.userRepository.getUserLends(userId.toString());
+            const { status, data } = userDebts;
+            if (status) {
+                if (data.length > 0) {
+                    const dueDebts = data.filter((debt) => debt.dueDate == new Date().getDate().toString());
+                    return api_response_1.ApiResponse.success("debsts got successfully", 200, dueDebts);
+                }
+                return api_response_1.ApiResponse.fail("No due dates", 404, userDebts.data);
+            }
+            return api_response_1.ApiResponse.fail("Unable to fetch debts", 500, userDebts.data);
         });
     }
 }

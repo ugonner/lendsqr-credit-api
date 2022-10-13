@@ -17,8 +17,8 @@ class UserController {
     }
     createUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { name, email, password } = req.body;
-            const user = { email, name, password };
+            const { name, email, password, role } = req.body;
+            const user = { email, name, password, role };
             const data = yield this.userservice.createUser(user);
             return res.json(data);
         });
@@ -38,10 +38,22 @@ class UserController {
             return res.json(data);
         });
     }
+    assignRole(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id, name, email, role } = req.body;
+            const user = { id, email, name, role };
+            const data = yield this.userservice.updateUser(user);
+            return res.json(data);
+        });
+    }
     login(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { email, authToken } = req.body;
             const data = yield this.userservice.loginUser(email, authToken);
+            if (!data.status)
+                return res.json(data);
+            const userData = data.data;
+            res.setHeader(`${process.env.LS_TOKEN}`, "Bearer " + (userData === null || userData === void 0 ? void 0 : userData.role));
             return res.json(data);
         });
     }

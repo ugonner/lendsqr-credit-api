@@ -4,7 +4,7 @@ import { IGenericResponse, IUser } from "../typings";
 import { UserRepository } from "../user/user.repository";
 import { ApiResponse } from "../utils/api-response";
 import { Helper } from "../utils/helper";
-import { Loan, LoanBid } from "./loan.model";
+import { IBid, Loan, LoanBid } from "./loan.model";
 import { LoanRepository } from "./loan.repository";
 
 export class LoanService {
@@ -18,8 +18,11 @@ export class LoanService {
   }
 
   async createLoan(loan: Loan): Promise<IGenericResponse<number | unknown>> {
-    const canLend = await TransactionService.userCanTransfer(<number>loan.lender, loan.amount)   
-    const { loanType, rate, amount, duration } = loan; 
+    const canLend = await TransactionService.userCanTransfer(
+      <number>loan.lender,
+      loan.amount
+    );
+    const { loanType, rate, amount, duration } = loan;
     const totalAmount = Helper.getAmountOnLoan(
       loanType,
       rate,
@@ -28,14 +31,11 @@ export class LoanService {
     );
     loan.totalAmount = totalAmount;
     const data = await this.loanRepository.createLoan(loan);
-        if (data.status) return ApiResponse.success("loan created", 201, data.data);
-        return ApiResponse.fail("unable to create loan", 400, data.data);
-  
-    }
+    if (data.status) return ApiResponse.success("loan created", 201, data.data);
+    return ApiResponse.fail("unable to create loan", 400, data.data);
+  }
 
-  async createLoanBid(
-    loan: LoanBid
-  ): Promise<IGenericResponse<number | unknown>> {
+  async createLoanBid(loan: IBid): Promise<IGenericResponse<number | unknown>> {
     const { loanType, rate, amount, duration } = loan;
     const totalAmount = Helper.getAmountOnLoan(
       loanType,
@@ -52,34 +52,49 @@ export class LoanService {
 
   async acceptLoanBid(loanId: number, loanBidId: number) {
     const loan: Loan = <Loan>(await this.loanRepository.getLoan(loanId)).data;
-    const loanBid: LoanBid = <LoanBid>(await this.loanRepository.getLoanBid(loanBidId)).data;
+    const loanBid: IBid = <LoanBid>(
+      (await this.loanRepository.getLoanBid(loanBidId)).data
+    );
     loan.claimed = true;
     loan.borrower = Number(loanBid.borrower);
     const updateData = await this.loanRepository.updateLoan(loan);
-    
-    if(updateData.status) return ApiResponse.success("LOAN BID ACCEPTED", 200, updateData.data)
-    
+
+    if (updateData.status)
+      return ApiResponse.success("LOAN BID ACCEPTED", 200, updateData.data);
+
     return ApiResponse.fail("LOAN BID ACCEPTED", 400, updateData.data);
-    
   }
 
   async repayLoanBid(transaction: Transaction, loanId: number) {
-    
-    const transferFund = (await this.transactionService.makeTransaction(transaction));
-    if(!transferFund.status) return ApiResponse.fail(transferFund.message, 400, transferFund.data);
-    const loan = (await this.loanRepository.getLoan(<number>loanId)).data as Loan
-    
-    const {amount, loanType, rate, duration, amountPaid} = loan;
-   const totalAmount = Helper.getAmountOnLoan(loanType, rate, amount, duration);
-     
-    if (Number(loan.totalAmount) <= amountPaid) return ApiResponse.fail("YOUR LOAN HAS FULLY REPAID", 400, loan.totalAmount);
-    if(loan.amount + amountPaid >= totalAmount){
-        loan.repaid = true;
+    const transferFund = await this.transactionService.makeTransaction(
+      transaction
+    );
+    if (!transferFund.status)
+      return ApiResponse.fail(transferFund.message, 400, transferFund.data);
+    const loan = (await this.loanRepository.getLoan(<number>loanId))
+      .data as Loan;
+
+    const { amount, loanType, rate, duration, amountPaid } = loan;
+    const totalAmount = Helper.getAmountOnLoan(
+      loanType,
+      rate,
+      amount,
+      duration
+    );
+
+    if (Number(loan.totalAmount) <= amountPaid)
+      return ApiResponse.fail(
+        "YOUR LOAN HAS FULLY REPAID",
+        400,
+        loan.totalAmount
+      );
+    if (loan.amount + amountPaid >= totalAmount) {
+      loan.repaid = true;
     }
     loan.amountPaid += Number(transaction.amount);
     loan.totalAmount = totalAmount;
     const updateData = await this.loanRepository.updateLoan(loan);
-    
+
     let message = `loan repayment success, with balance of ${loan.amountPaid} of ${totalAmount}`;
     if (updateData.status)
       return ApiResponse.success(message, 200, updateData.data);
@@ -124,7 +139,7 @@ export class LoanService {
   }
 
   async updateLoanBid(
-    loan: LoanBid
+    loan: IBid
   ): Promise<IGenericResponse<LoanBid | unknown>> {
     const bid = <LoanBid>(
       (await this.loanRepository.getLoanBid(<number>loan.id)).data
@@ -137,4 +152,33 @@ export class LoanService {
     return ApiResponse.fail("unable to create loan", 400, data.data);
   }
 
+  async getUserDueDebts(userId: number) {
+    const userDebts = await this.getUserLoanBids(userId);
+    const { status, data } = userDebts;
+    if (status) {
+      if ((<IBid[]>data).length > 0) {
+        const dueDebts = (<IBid[]>data).filter(
+          (debt: IBid) => debt.dueDate == new Date().getDate().toString()
+        );
+        return ApiResponse.success("debsts got successfully", 200, dueDebts);
+      }
+      return ApiResponse.fail("No due dates", 404, userDebts.data);
+    }
+    return ApiResponse.fail("Unable to fetch debts", 500, userDebts.data);
+  }
+
+  async getLendersMatureLoans(userId: number) {
+    const userDebts = await this.userRepository.getUserLends(userId.toString());
+    const { status, data } = userDebts;
+    if (status) {
+      if ((<IBid[]>data).length > 0) {
+        const dueDebts = (<IBid[]>data).filter(
+          (debt: IBid) => debt.dueDate == new Date().getDate().toString()
+        );
+        return ApiResponse.success("debsts got successfully", 200, dueDebts);
+      }
+      return ApiResponse.fail("No due dates", 404, userDebts.data);
+    }
+    return ApiResponse.fail("Unable to fetch debts", 500, userDebts.data);
+  }
 }

@@ -2,12 +2,12 @@
 
 API for a loan-HUB app
 
-TECHNOLOGIES:
+TECHNOLOGIES
 - Nodejs Typescript
 - knex database QueryBuilder,
 - Expressjs Framework implementation; Domain Driven Architecture.
 
-FEATURES:
+FEATURES
 - Provides endpoints for lenders to create multiple loan proposals 
 based on ther wallet limits.
 
@@ -19,10 +19,14 @@ indices; rates, duration and amount
 
 - borrowers are able to repay accepted loans
 - installmental payments are allowed with checks to block over pays
-
+- can always see due debts
 - borrowers are able to adjust loan bids until lender accepts one
 on accepting one bid; no further adjustmensts is possible on bids
 
 - app starts with and 
   npm run | yarn "start"
 
+  - run tests with
+  npm run | uarn test
+
+github: https://github.com/ugonner/lendsqr-credit-api.git
