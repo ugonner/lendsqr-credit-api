@@ -88,6 +88,13 @@ class LoanController {
             return res.json(data);
         });
     }
+    getUserDueDebts(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const userId = Number(req.params.userId);
+            const data = yield this.loanservice.getUserDueDebts(userId);
+            return res.json(data);
+        });
+    }
     getUserDebts(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const userId = Number(req.params.userId);

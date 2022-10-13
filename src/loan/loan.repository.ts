@@ -1,13 +1,13 @@
 import knex from "../../database/app.knexfile";
-import { IBid, IGenericResponse, IGenericReturnType, IUser } from "../typings";
+import { IGenericResponse, IGenericReturnType, IUser } from "../typings";
 import { ApiResponse } from "../utils/api-response";
 import { ServiceResponse } from "../utils/service-response";
-import { LoanBid, Loan } from "./loan.model";
+import { LoanBid, Loan, IBid } from "./loan.model";
 
 export class LoanRepository {
   constructor() {}
 
-  async createLoan(bid: Loan): Promise<IGenericReturnType<number[] | unknown>> {
+  async createLoan(bid: IBid): Promise<IGenericReturnType<number[] | unknown>> {
     
     try {
       const data = await knex("loan").insert(bid);
@@ -18,7 +18,7 @@ export class LoanRepository {
   }
 
   async createLoanBid(
-    bid: LoanBid
+    bid: IBid
   ): Promise<IGenericReturnType<number[] | unknown>> {
     try {
       const data = await knex("Loanbid").insert(bid);
@@ -146,7 +146,7 @@ export class LoanRepository {
   }
 
   async updateLoanBid(
-    loan: LoanBid
+    loan: IBid
   ): Promise<IGenericReturnType<Number | unknown>> {
     try {
       const data = await knex("Loanbid").update(loan).where("id", loan.id);
@@ -156,7 +156,7 @@ export class LoanRepository {
     }
   }
 
-  async updateLoan(loan: Loan): Promise<IGenericReturnType<Number | unknown>> {
+  async updateLoan(loan: IBid): Promise<IGenericReturnType<Number | unknown>> {
     try {
       const data = await knex("Loan").update(loan).where("id", loan.id);
       return ServiceResponse.success("success user update", data);

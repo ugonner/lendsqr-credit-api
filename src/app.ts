@@ -5,9 +5,11 @@ import cors from 'cors';
 import UserRouter from "./user/user.route";
 import LoanRouter from "./loan/loan.route";
 import TransactionRouter from "./transaction/transaction.route";
+import { ApiResponse } from './utils/api-response';
 dotenv.config();
 
 const app = Express();
+const oneDay = 1000 * 60 * 60 * 24;
 
 app.use( [cors(), logger('dev')]);
 app.use(Express.json());
@@ -23,7 +25,8 @@ app.use("/", (req, res) => {
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     if(err){
-        return res.json(err);
+        const error = ApiResponse.fail(err.message, 500, err);
+        return res.json(error);
     }
     return res.send("success");
 })
@@ -31,3 +34,4 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 app.listen(3400, () => {
     console.log('connected')
 })
+export default app

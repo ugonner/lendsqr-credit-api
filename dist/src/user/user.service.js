@@ -23,6 +23,7 @@ class UserService {
             const userExists = (yield this.userRepository.getUser(user.email)).data;
             if (userExists && userExists[0] > 0)
                 return api_response_1.ApiResponse.fail("email already exists", 400, user);
+            user.role = user.role ? user.role : "user";
             const returnData = yield this.userRepository.createUser(user);
             const createdUser = returnData.data;
             if (returnData.status) {
@@ -40,6 +41,11 @@ class UserService {
                 return api_response_1.ApiResponse.success("user updated", 201, returnData.data);
             }
             return api_response_1.ApiResponse.fail("user not updated", returnData.status, returnData.data);
+        });
+    }
+    assignUserRole(user) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.updateUser(user);
         });
     }
     getUser(userid) {
@@ -63,15 +69,11 @@ class UserService {
     loginUser(email, userToken) {
         return __awaiter(this, void 0, void 0, function* () {
             const returnData = yield this.userRepository.getUser(email);
-            console.log(returnData);
             if (!returnData.status) {
                 return api_response_1.ApiResponse.fail("Email not found, sign up", 400, returnData.data);
             }
-            if (userToken !== process.env.AUTH_TOKEN)
-                return api_response_1.ApiResponse.fail("not authenticated ", 400, returnData.data);
             const data = returnData.data;
-            const authToken = process.env.AUTH_TOKEN;
-            return api_response_1.ApiResponse.success("logged in successfull", 200, Object.assign(Object.assign({}, data), { authToken }));
+            return api_response_1.ApiResponse.success("logged in successfull", 200, data);
         });
     }
 }

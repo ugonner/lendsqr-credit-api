@@ -97,6 +97,12 @@ export class LoanController {
     return res.json(data);
   }
 
+  async getUserDueDebts(req: Request, res: Response) {
+    const userId = Number(req.params.userId);
+    const data = await this.loanservice.getUserDueDebts(userId);
+    return res.json(data);
+  }
+
   async getUserDebts(req: Request, res: Response) {
     const userId = Number(req.params.userId);
     const data = await this.loanservice.getUserLoanBids(userId);

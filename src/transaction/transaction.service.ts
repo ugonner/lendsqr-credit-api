@@ -24,7 +24,8 @@ export class TransactionService {
   }
 
   async withdrawFund(userId: number, amount: number) {
-    const canWithdraw = TransactionService.userCanTransfer(userId, amount);
+    const canWithdraw = await TransactionService.userCanTransfer(userId, amount);
+    
     if(!canWithdraw) return ApiResponse.fail("not enough fund", 400, amount)
     const data = await this.transactionRepository.updateUserAccount(
       userId,
@@ -45,7 +46,7 @@ export class TransactionService {
         await TransactionRepository.getUserAccount(userId)
       ).data
     );
-    return userAccout.balance < transferAmount ? false : true;
+    return Number(userAccout.balance) >= Number(transferAmount);
   }
 
   async makeTransaction(

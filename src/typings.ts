@@ -17,10 +17,3 @@ export interface IUser {
   role?: string;
 }
 
-export interface IBid {
-  id?: number;
-  amount: number;
-  rate: number;
-  duration: number;
-  loanType: string;
-}

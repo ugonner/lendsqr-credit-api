@@ -28,7 +28,7 @@ class TransactionService {
     }
     withdrawFund(userId, amount) {
         return __awaiter(this, void 0, void 0, function* () {
-            const canWithdraw = TransactionService.userCanTransfer(userId, amount);
+            const canWithdraw = yield TransactionService.userCanTransfer(userId, amount);
             if (!canWithdraw)
                 return api_response_1.ApiResponse.fail("not enough fund", 400, amount);
             const data = yield this.transactionRepository.updateUserAccount(userId, "-", amount);
@@ -40,7 +40,7 @@ class TransactionService {
     static userCanTransfer(userId, transferAmount) {
         return __awaiter(this, void 0, void 0, function* () {
             const userAccout = (yield (yield transaction_repository_1.TransactionRepository.getUserAccount(userId)).data);
-            return userAccout.balance < transferAmount ? false : true;
+            return Number(userAccout.balance) >= Number(transferAmount);
         });
     }
     makeTransaction(transaction) {

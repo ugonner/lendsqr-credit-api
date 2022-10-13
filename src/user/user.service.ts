@@ -16,7 +16,7 @@ export class UserService {
   async createUser(user: IUser): Promise<IGenericResponse<number | unknown>> {
     const userExists = (await this.userRepository.getUser(user.email)).data as number[];
     if(userExists && userExists[0] > 0) return ApiResponse.fail("email already exists", 400, user);
-    
+    user.role = user.role ? user.role: "user";
     const returnData = await this.userRepository.createUser(user);
     const createdUser = returnData.data as number[];
     if (returnData.status) {
@@ -41,6 +41,10 @@ export class UserService {
       returnData.status,
       returnData.data
     );
+  }
+
+  async assignUserRole(user: IUser): Promise<IGenericResponse<number | unknown>> {
+    return this.updateUser(user);
   }
 
   async getUser(userid: string): Promise<IGenericResponse<IUser | unknown>> {
@@ -73,17 +77,15 @@ export class UserService {
     email: string, userToken: string
   ): Promise<IGenericResponse<number | unknown>> {
     const returnData = await this.userRepository.getUser(email);
-    console.log(returnData);
+    
     if (!returnData.status) {
       return ApiResponse.fail("Email not found, sign up", 400, returnData.data);
     }
-    if(userToken !== process.env.AUTH_TOKEN) return ApiResponse.fail("not authenticated ", 400, returnData.data);
     const data = returnData.data as IUser;
-    const authToken = process.env.AUTH_TOKEN;
     return ApiResponse.success(
       "logged in successfull",
       200,
-      {...data, authToken}
+      data
     );
   }
 
