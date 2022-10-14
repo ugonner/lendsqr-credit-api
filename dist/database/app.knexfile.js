@@ -11,10 +11,10 @@ const config = {
     development: {
         client: "mysql2",
         connection: {
-            host: '127.0.0.1',
+            host: "127.0.0.1",
             port: 3306,
-            database: 'ls_credit',
-            user: 'root',
+            database: "ls_credit",
+            user: "root",
             password: "bona2022",
         },
         migrations: {
@@ -22,13 +22,13 @@ const config = {
         },
     },
     production: {
-        client: "mysql2",
+        client: "postgresql",
         connection: {
             host: "http://sql5.freesqldatabase.com/",
-            port: "3306",
+            port: 3306,
             database: "sql5526588",
             user: "sql5526588",
-            password: "9z4aZrjuJf"
+            password: "9z4aZrjuJf",
         },
         pool: {
             min: 2,

@@ -1,4 +1,4 @@
-import { IBid, IUser } from "../typings";
+import { IUser } from "../typings";
 
 export class User implements IUser {
     name: string = "";

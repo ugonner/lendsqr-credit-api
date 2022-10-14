@@ -23,9 +23,11 @@ const config = {
     production: {
         client: "postgresql",
         connection: {
-            database: "my_db",
-            user: "username",
-            password: "password",
+            host: "http://sql5.freesqldatabase.com/",
+            port: 3306,
+            database: "sql5526588",
+            user: "sql5526588",
+            password: "9z4aZrjuJf",
         },
         pool: {
             min: 2,
