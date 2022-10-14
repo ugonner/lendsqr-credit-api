@@ -9,7 +9,8 @@
     "start:dev": "npx tsc --watch",
     "test": "jest",
     "migrate": "npx tsc && sleep 1 && knex migrate:latest --knexfile ./dist/database/knexfile.js --migrations-directory ../database/migrations",
-    "rollback": "npx tsc && sleep 1 && knex migrate:rollback --knexfile ./dist/database/knexfile.js --migrations-directory ../database/migrations"
+    "rollback": "npx tsc && sleep 1 && knex migrate:rollback --knexfile ./dist/database/knexfile.js --migrations-directory ../database/migrations",
+    "heroku-postbuild": "migrate"
   },
   "repository": {
     "type": "git",
