@@ -12,7 +12,7 @@ export async function up(knex: Knex): Promise<void> {
     table.double("rate").notNullable().defaultTo(1);
     table.double("amount").notNullable().defaultTo(0);
     table.double("totalAmount").notNullable().defaultTo(0);
-    table.timestamps(true, true);
+    table.timestamps(true);
   });
 }
 

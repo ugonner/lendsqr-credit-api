@@ -6,7 +6,7 @@ export async function up(knex: Knex): Promise<void> {
         table.increments("id").primary();
         table.integer("userId").notNullable();
         table.double("balance").notNullable().defaultTo(0.0);
-        table.timestamps(true,true);
+        table.timestamps(true);
     });
 
 }

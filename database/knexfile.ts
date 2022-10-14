@@ -7,10 +7,10 @@ const config: { [key: string]: Knex.Config } = {
   development: {
     client: "mysql2",
     connection: {
-      host: '127.0.0.1',
+      host: "127.0.0.1",
       port: 3306,
-      database: 'ls_credit',
-      user: 'root',
+      database: "ls_credit",
+      user: "root",
       password: "bona2022",
     },
     migrations: {

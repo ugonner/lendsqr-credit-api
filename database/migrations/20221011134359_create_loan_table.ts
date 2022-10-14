@@ -7,7 +7,7 @@ export async function up(knex: Knex): Promise<void> {
     table.integer("receiver").notNullable();
     table.string("paymentRef", 255);
     table.double("amount").notNullable().defaultTo(0);
-    table.timestamps(true, true);
+    table.timestamps(true);
   });
 }
 
