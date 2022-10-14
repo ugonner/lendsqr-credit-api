@@ -21,7 +21,7 @@ const config = {
         },
     },
     production: {
-        client: "postgresql",
+        client: "mysql2",
         connection: {
             host: "http://sql5.freesqldatabase.com/",
             port: 3306,

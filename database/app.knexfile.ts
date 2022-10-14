@@ -19,7 +19,7 @@ const config: { [key: string]: Knex.Config } = {
   },
 
   production: {
-    client: "postgresql",
+    client: "mysql2",
     connection: {
       host: "http://sql5.freesqldatabase.com/",
       port: 3306,
@@ -36,4 +36,4 @@ const config: { [key: string]: Knex.Config } = {
     },
   },
 };
-export default knex(config["development"]);
+export default knex(config[`${process.env.NODE_ENV}`]);

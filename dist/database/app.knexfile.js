@@ -22,7 +22,7 @@ const config = {
         },
     },
     production: {
-        client: "postgresql",
+        client: "mysql2",
         connection: {
             host: "http://sql5.freesqldatabase.com/",
             port: 3306,
@@ -39,4 +39,4 @@ const config = {
         },
     },
 };
-exports.default = (0, knex_1.default)(config["development"]);
+exports.default = (0, knex_1.default)(config[`${process.env.NODE_ENV}`]);
