@@ -26,7 +26,11 @@ app.use("/", (req, res) => {
     //   200,
     //   true
     // );
-    res.send("process running fine");
+    const response = {
+        status: 200,
+        message: "app running successfully",
+    }
+    res.json(response);
 });
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
