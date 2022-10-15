@@ -29,8 +29,8 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
         const error = ApiResponse.fail(err.message, 500, err);
         return res.json(error);
     }
-    const res: IGenericResponse<boolean> = ApiResponse.success("process runnign fine", 200, true)
-    return res.send(res);
+    const response: IGenericResponse<boolean> = ApiResponse.success("process runnign fine", 200, true)
+    return res.send(response);
 })
 
 app.listen(process.env.PORT, () => {
