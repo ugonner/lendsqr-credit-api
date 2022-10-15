@@ -21,12 +21,12 @@ app.use("/loan", LoanRouter);
 app.use("/transaction", TransactionRouter);
 
 app.use("/", (req, res) => {
-    const response: IGenericResponse<boolean> = ApiResponse.success(
-      "process running fine",
-      200,
-      true
-    );
-    return res.json(response);
+    // const response: IGenericResponse<boolean> = ApiResponse.success(
+    //   "process running fine",
+    //   200,
+    //   true
+    // );
+    res.send("process running fine");
 });
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
