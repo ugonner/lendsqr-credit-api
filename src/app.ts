@@ -31,7 +31,7 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     return res.send("success");
 })
 
-app.listen(3400, () => {
+app.listen(process.env.PORT, () => {
     console.log('connected')
 })
 export default app
