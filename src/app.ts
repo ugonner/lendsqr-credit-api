@@ -21,7 +21,12 @@ app.use("/loan", LoanRouter);
 app.use("/transaction", TransactionRouter);
 
 app.use("/", (req, res) => {
-  res.send(`Cannot bad error ${req.url}`);
+    const response: IGenericResponse<boolean> = ApiResponse.success(
+      "process running fine",
+      200,
+      true
+    );
+    return res.send(response);
 });
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
@@ -29,7 +34,7 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
         const error = ApiResponse.fail(err.message, 500, err);
         return res.json(error);
     }
-    const response: IGenericResponse<boolean> = ApiResponse.success("process runnign fine", 200, true)
+    const response: IGenericResponse<boolean> = ApiResponse.success("process running fine", 200, true)
     return res.send(response);
 })
 
