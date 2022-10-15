@@ -24,7 +24,7 @@ const config = {
     production: {
         client: "mysql2",
         connection: {
-            host: "http://sql5.freesqldatabase.com/",
+            host: "sql5.freesqldatabase.com",
             port: 3306,
             database: "sql5526588",
             user: "sql5526588",
