@@ -6,6 +6,7 @@ import UserRouter from "./user/user.route";
 import LoanRouter from "./loan/loan.route";
 import TransactionRouter from "./transaction/transaction.route";
 import { ApiResponse } from './utils/api-response';
+import { IGenericResponse } from './typings';
 dotenv.config();
 
 const app = Express();
@@ -28,7 +29,8 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
         const error = ApiResponse.fail(err.message, 500, err);
         return res.json(error);
     }
-    return res.send("success");
+    const res: IGenericResponse<boolean> = ApiResponse.success("process runnign fine", 200, true)
+    return res.send(res);
 })
 
 app.listen(process.env.PORT, () => {
