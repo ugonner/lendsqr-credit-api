@@ -30,7 +30,7 @@ app.use("/", (req, res) => {
         status: 200,
         message: "app running successfully",
     }
-    res.send(response);
+    res.send(response.message);
 });
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
