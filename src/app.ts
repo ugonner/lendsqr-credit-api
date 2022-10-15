@@ -26,7 +26,7 @@ app.use("/", (req, res) => {
       200,
       true
     );
-    res.json(response);
+    res.json(JSON.stringify(response));
 });
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
