@@ -2,6 +2,7 @@ import Express, {NextFunction, Request, Response} from 'express';
 import dotenv from 'dotenv';
 import logger from 'morgan';
 import cors from 'cors';
+import cookieParser from "cookie-parser";
 import UserRouter from "./user/user.route";
 import LoanRouter from "./loan/loan.route";
 import TransactionRouter from "./transaction/transaction.route";
@@ -10,11 +11,11 @@ import { IGenericResponse } from './typings';
 dotenv.config();
 
 const app = Express();
-const oneDay = 1000 * 60 * 60 * 24;
 
 app.use( [cors(), logger('dev')]);
 app.use(Express.json());
-app.use(Express.urlencoded());
+app.use(Express.urlencoded({ extended: false }));
+app.use(cookieParser());
 
 app.use("/user", UserRouter);
 app.use("/loan", LoanRouter);
