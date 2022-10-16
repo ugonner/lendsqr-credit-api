@@ -30,3 +30,5 @@ on accepting one bid; no further adjustmensts is possible on bids
   npm run | uarn test
 
 github: https://github.com/ugonner/lendsqr-credit-api.git
+DD: https://docs.google.com/document/d/18aLTlCEvifrn8qRWV-y7sN42mYAgLFNVDuuYAilSaZU/edit
+heroku: https://bonaventure-lendsqr-be-test.herokuapp.com/
