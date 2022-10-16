@@ -15,7 +15,12 @@ export class RoleGuard {
       let userRole = <string>req.headers[`${process.env.LS_TOKEN}`];
       userRole = /bearer /i.test(userRole) ? userRole.trim().split(" ")[1]  : userRole;
       if (userRole && roles.includes(userRole)) return next();
-      throw new Error("unauthorixed access");
+    const response = ApiResponse.fail(
+      "Unauthorized access",
+      403,
+      new Error("unauthorixed access " + userRole)
+    );
+    return res.json(response);
     }   
   }
 }
